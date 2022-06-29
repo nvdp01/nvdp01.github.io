@@ -3,11 +3,6 @@
         {%- include head.html -%}
     <body>
     <main class="page-content" aria-label="Content">
-    <head>
-        {% if site.google_analytics and jekyll.environment == 'production' %}
-        {% include analytics.html %}
-        {% endif %}
-    </head>
         <div class="wrapper">
             {{ content }}
         </div>
