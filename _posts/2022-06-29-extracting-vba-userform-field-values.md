@@ -64,6 +64,8 @@ I added a function `consume_EmbeddedFormControl()` in _oleform_ to handle this c
 
 Finally, I had all 70 form fields needed to construct the executable Hex string and other text strings.
 
+_(Update 2022-06-30): I submitted a [pull request] for merging these changes into oletools._
+
 ### Finally done
 
 I added some hacky code to my wrapper to convert VBA expressions to Python expressions using Regex and evaluate them using Python `eval()`. The final code is available [here].
@@ -94,6 +96,7 @@ Executable file is a basic malware with capability to run obtained commands and 
 [section 2.1.1.2.4 - Padding and Alignment]: https://interoperability.blob.core.windows.net/files/MS-OFORMS/[MS-OFORMS].pdf#%5B%7B%22num%22%3A117%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C641%2C0%5D
 [ClsidCacheIndex value of 14]: https://interoperability.blob.core.windows.net/files/MS-OFORMS/[MS-OFORMS].pdf#%5B%7B%22num%22%3A289%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C242%2C0%5D
 [section 2.1.2.2.2 - Embedded Parents]: https://interoperability.blob.core.windows.net/files/MS-OFORMS/[MS-OFORMS].pdf#%5B%7B%22num%22%3A123%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C401%2C0%5D
+[pull request]: https://github.com/decalage2/oletools/pull/775
 [here]: https://gist.github.com/nvdp01/b557202a49be950ce699ddae8d94249b
 [SHA256: 83388741cb6e6ee7341ae00cb9ab92c8a0132d92307473a4c08e678153a27cef]: https://www.virustotal.com/gui/file/83388741cb6e6ee7341ae00cb9ab92c8a0132d92307473a4c08e678153a27cef/details
 [Option Base 1]: https://docs.microsoft.com/en-us/office/vba/language/reference/user-interface-help/option-base-statement
