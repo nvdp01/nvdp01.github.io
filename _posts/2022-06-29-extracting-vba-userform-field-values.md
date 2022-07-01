@@ -7,7 +7,7 @@ categories: analysis
 I came across a [maldoc] recently which uses strings stored as values of various OLE form fields to build an executable file. It also constructs various commands to drop and run the executable in the same way. The maldoc is [probably] related to [Lazarus Group], but this post is not about attribution.
 
 A total of 70 form fields stored as Caption, Tag, Text or ControlTipText values of various control elements (like TextBox, CommandButton, ScrollBar etc.) embedded across four parent Form controls are present in the maldoc.
-These values are concatentated (at times, after an StrReverse() operation) in the VBA macro to build a hex string of the executable. Similarly, the macro also builds multiple text strings which are passed as parameters to functions responsible for creating the executable file on disk and executing it.
+These values are concatenated (at times, after an StrReverse() operation) in the VBA macro to build a hex string of the executable. Similarly, the macro also builds multiple text strings which are passed as parameters to functions responsible for creating the executable file on disk and executing it.
 
 ![Macro code showing references to form field values](/assets/post_images/2022-06-28-extracting-vba-userform-field-values/macro_snippet.png)
 
@@ -74,7 +74,7 @@ The file created from the hex string by the macro is [SHA256: 83388741cb6e6ee734
 
 _Sidenote: The above file dropped on the disk by the macro contains one extra null byte than the file which one would get from the concatenated hex string. This difference comes from use of `Redim` with size `len(hexstring)/2` in the macro without using [Option Base 1]. Due to this, the array index in `Redim` statement starts from 0 instead of 1, leading to an extra null byte in the end._
 
-Other constructed text strings by the macro are shown below:
+Other text strings constructed by the macro are shown below:
 
 ![Strings constructed by the macro](/assets/post_images/2022-06-28-extracting-vba-userform-field-values/constructed_strings.png)
 
