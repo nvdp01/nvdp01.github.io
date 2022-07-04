@@ -9,7 +9,7 @@ I came across a [maldoc] recently which uses strings stored as values of various
 A total of 70 form fields stored as Caption, Tag, Text or ControlTipText values of various control elements (like TextBox, CommandButton, ScrollBar etc.) embedded across four parent Form controls are present in the maldoc.
 These values are concatenated (at times, after an StrReverse() operation) in the VBA macro to build a hex string of the executable. Similarly, the macro also builds multiple text strings which are passed as parameters to functions responsible for creating the executable file on disk and executing it.
 
-![Macro code showing references to form field values](/assets/post_images/2022-06-28-extracting-vba-userform-field-values/macro_snippet.png)
+![Macro code showing references to form field values](/assets/post_images/2022-06-29-extracting-vba-userform-field-values/macro_snippet.png)
 
 Extracting these strings is, of course, possible by running the macro code in the Office VBA debugger and setting breakpoints at appropriate locations. However, I endeavoured to extract the strings "statically".
 
@@ -32,13 +32,13 @@ The _oletools_ project however does not contain any interface to use `extract_Ol
 
 I wrote a simple wrapper to call `extract_OleFormVariables()` for the maldoc and see if it works.
 
-![Wrapper code to call extract_OleFormVariables()](/assets/post_images/2022-06-28-extracting-vba-userform-field-values/initial_wrapper.png)
+![Wrapper code to call extract_OleFormVariables()](/assets/post_images/2022-06-29-extracting-vba-userform-field-values/initial_wrapper.png)
 
 ### Encountering a bug
 
 Many of the output values were prepended with 1-3 bytes of seemingly junk data. These bytes are not present when the form field value is viewed in Word or LibreOffice Writer. An equal number of bytes were also missing at the end of the value in these cases.
 
-![Difference in values from oleform and LibreOffice Writer](/assets/post_images/2022-06-28-extracting-vba-userform-field-values/value_difference.png)
+![Difference in values from oleform and LibreOffice Writer](/assets/post_images/2022-06-29-extracting-vba-userform-field-values/value_difference.png)
 
 This indicated presence of a bug in _oleform_, which I decided to try locating and fixing. After some debugging and going through MS-OFORMS, I found the bug.
 The properties Name, Caption, Tag, Text, ControlTipText etc. of various controls are all of type String (specifically an [fmString]). These strings are padded to multiples of four bytes in the OLE stream. _oleform_ did not consider this padding in String values while parsing the stream.
@@ -55,7 +55,7 @@ This took care of those extra junk bytes and it seemed that my work was done. No
 
 I soon discovered that some of the controls had a Caption property (called Label in LibreOffice Writer) which was not extracted by _oleform_.
 
-![Missing caption/label value for a Frame control](/assets/post_images/2022-06-28-extracting-vba-userform-field-values/missing_caption.png)
+![Missing caption/label value for a Frame control](/assets/post_images/2022-06-29-extracting-vba-userform-field-values/missing_caption.png)
 
 All these controls had [ClsidCacheIndex value of 14] indicating it is a Frame control - i.e. a control embedded in a parent Form while having child controls of its own. ([section 2.1.2.2.2 - Embedded Parents])  
 In such cases, the OLE stream directory contains a child "i" stream which contains the missing Caption property. (and can contain additional properties)
@@ -76,7 +76,7 @@ _Sidenote: The above file dropped on the disk by the macro contains one extra nu
 
 Other text strings constructed by the macro are shown below:
 
-![Strings constructed by the macro](/assets/post_images/2022-06-28-extracting-vba-userform-field-values/constructed_strings.png)
+![Strings constructed by the macro](/assets/post_images/2022-06-29-extracting-vba-userform-field-values/constructed_strings.png)
 
 The file is created in _%TEMP%_ folder as _1Vqar5tGI51.sak._ It is then moved to _Startup_ folder and renamed as _WHealthScanner.exe._ Finally, the file is executed.
 
